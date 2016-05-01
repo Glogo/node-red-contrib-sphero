@@ -17,6 +17,8 @@ module.exports = function(RED) {
       return;
     }
 
+    node.ollie = config.ollie;
+
     if(!config.uuid) {
       node.error('No UUID specified');
       return;

@@ -1,11 +1,11 @@
 
 var currentDirection = 0;
 var directionStep = 45;
-var maxSpeed = 120;
+var maxSpeedOllie = 45;
+var maxSpeedBB8 = 120;
+var maxSpeed = maxSpeedOllie;
 var currentSpeed = 0;
 var state = 0;
-
-var timer;
 
 module.exports = function (RED) {
 	RED.nodes.registerType('sphero', handler);
@@ -26,6 +26,12 @@ module.exports = function (RED) {
 
 		} else {
 			node.sphero = spheroConnection.sphero;
+
+			if(spheroConnection.ollie) {
+				maxSpeed = maxSpeedOllie;
+			} else {
+				maxSpeed = maxSpeedBB8;
+			}
 		}
 
 		node.action = config.action;
@@ -41,20 +47,6 @@ module.exports = function (RED) {
 			node.on('input', function(msg) {
 				// Just forward message and invoke action
 				node.send(msg);
-
-				// Add timer to stop device after 0.5 second. Timer will be cancelled and re-initialized with every new action
-				if (timer) {
-					clearTimeout(timer);
-				}
-
-				timer = setTimeout(function() {
-					stop();
-				}, 500);
-
-				function stop() {
-					node.sphero.roll(0, currentDirection, 2);
-					currentSpeed = 0;
-				}
 
 				/**
 				 * Add / edit actions here
@@ -74,10 +66,11 @@ module.exports = function (RED) {
 					doTurn(180);
 
 				} else if (node.action === 'stop') {
-					node.sphero.roll(0, currentDirection, 0);
+					node.sphero.roll(0, currentDirection, 2);
 					currentSpeed = 0;
 
 				} else if (node.action === 'turn-left') {
+					// Do not stop when turning
 					doTurn(-directionStep);
 
 				} else if (node.action === 'turn-right') {

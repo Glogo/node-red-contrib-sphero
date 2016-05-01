@@ -7,7 +7,8 @@
       uuid: {
         value: '', required: true
       },
-      disabled: {value: false},
+      ollie: {value: false},
+      disabled: {value: false}
     },
     label: function() {
       return this.name || this.uuid || 'sphero-connection';
@@ -23,6 +24,10 @@
   <div class="form-row">
     <label for="node-config-input-uuid"><i class="icon-bookmark"></i> Droid UUID</label>
     <input type="text" id="node-config-input-uuid" placeholder="UUID">
+  </div>
+  <div class="form-row">
+    <label for="node-config-input-ollie"><i class="fa fa-circle"></i> Ollie</label>
+    <input type="checkbox" id="node-config-input-ollie" placeholder="Ollie">
   </div>
   <div class="form-row">
     <label for="node-config-input-disabled"><i class="fa fa-power-off"></i> Disabled</label>
