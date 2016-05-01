@@ -1,6 +1,7 @@
 var sphero = require('sphero');
 
 var connections = {};
+var uuids = {};
 
 module.exports = function(RED) {
   RED.nodes.registerType('sphero-connection', handler);
@@ -9,9 +10,17 @@ module.exports = function(RED) {
   	RED.nodes.createNode(this, config);
     var node = this;
 
+    // Skip for disabled connections
+    if(config.disabled) {
+      node.log('Droid disabled. To enable: open Node-RED menu -> Configuration nodes -> double click on your node and untick "disabled"');
+      node.disabled = true;
+      return;
+    }
+
     if(!config.uuid) {
       node.error('No UUID specified');
       return;
+
     } else {
       // Convert uuid to lowercase
       config.uuid = config.uuid.toLowerCase();
@@ -22,12 +31,23 @@ module.exports = function(RED) {
     if(con) {
       node.sphero = con;
 
+      // Give chance to sphero node to register callback
       setTimeout(function() {
         node.log('Already connected to: ' + config.uuid);
         callOnConnect(node.sphero.onConnectListeners);
-      }, 1000);
+      }, 500);
 
     } else {
+      // Prevent connecting multiple times to same droid (f.e. two identical config nodes - sphero bug - thx)
+      if(uuids[config.uuid]) {
+        node.error('Detected multiple connection attempts to: ' + config.uuid);
+        node.error('Some nodes may not be able to connect. Please remove duplicate connection configurations or disable them');
+        return;
+
+      } else {
+        uuids[config.uuid] = true;
+      }
+
       node.sphero = sphero(config.uuid);
       node.sphero.onConnectListeners = [];
       node.sphero.addOnConnectListener = function(cb) {
