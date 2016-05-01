@@ -1,0 +1,31 @@
+<script type="text/javascript">
+  RED.nodes.registerType('sphero-connection', {
+    category: 'config',
+    color: '#a6bbcf',
+    defaults: {
+      name: {value: ''},
+      uuid: {
+        value: '', required: true
+      },
+      disabled: {value: false},
+    },
+    label: function() {
+      return this.name || this.uuid || 'sphero-connection';
+    }
+  });
+</script>
+
+<script type="text/x-red" data-template-name="sphero-connection">
+  <div class="form-row">
+    <label for="node-config-input-name"><i class="icon-tag"></i> Name</label>
+    <input type="text" id="node-config-input-name" placeholder="Name">
+  </div>
+  <div class="form-row">
+    <label for="node-config-input-uuid"><i class="icon-bookmark"></i> Droid UUID</label>
+    <input type="text" id="node-config-input-uuid" placeholder="UUID">
+  </div>
+  <div class="form-row">
+    <label for="node-config-input-disable"><i class="fa fa-power-off"></i> Disable</label>
+    <input type="checkbox" id="node-config-input-disable" placeholder="Disable">
+  </div>
+</script>

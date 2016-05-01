@@ -1,0 +1,65 @@
+<script type="text/javascript">
+  RED.nodes.registerType('sphero', {
+    category: 'iot-nodes',
+    color: '#7fb9f3',
+    defaults: {
+      connection: {value: '', type: 'sphero-connection',  required: true},
+      action: {value: 'random-color'},
+      color: {value: 'blue'}
+    },
+    inputs: 1,
+    outputs: 1,
+    icon: 'bb8.png',
+    label: function() {
+      if(this.action === 'set-color') {
+        return this.action + ': ' + this.color;
+      } else {
+        return this.action;
+      }
+    },
+    oneditprepare: function() {
+      var actionSelect = $('#node-input-action');
+      var colorContainer = $('#node-input-color-container');
+
+      actionSelect.change(showHideColorInput);
+
+      function showHideColorInput() {
+        // Show color input only when action is 'set-color'
+        if(actionSelect.val() === 'set-color') {
+          colorContainer.show();
+        } else {
+          colorContainer.hide();
+        }
+      }
+
+    }
+  });
+</script>
+
+<script type="text/x-red" data-template-name="sphero">
+	<div class="form-row">
+    <label for="node-input-connection"><i class="fa fa-bluetooth-b"></i> Connection</label>
+    <input type="text" id="node-input-connection" placeholder="Connection">
+  </div>
+  <div class="form-row">
+    <label for="node-input-action"><i class="fa fa-paw"></i> Action</label>
+    <select id="node-input-action">
+      <option value="random-color">Random color</option>
+      <option value="set-color">Set color</option>
+      <option value="move-forward">Move forward</option>
+      <option value="move-backward">Move backward</option>
+      <option value="stop">Stop</option>
+      <option value="turn-left">Turn left</option>
+      <option value="turn-right">Turn right</option>
+    </select>
+  </div>
+  <div class="form-row" id="node-input-color-container">
+    <label for="node-input-color"><i class="fa fa-paint-brush"></i> Color</label>
+    <input type="text" id="node-input-color" placeholder="Color">
+  </div>
+</script>
+
+<script type="text/x-red" data-help-name="sphero">
+  <p>Simple Node that controlls Sphero Droid and changes its color.</p>
+  <p><a target="_blank" href="https://github.com/orbotix/sphero.js/blob/0a4b22e5f083bdaf7408210a4675f529d32fff29/lib/colors.js">List of available colors</a></p>
+</script>
