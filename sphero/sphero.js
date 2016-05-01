@@ -21,7 +21,7 @@ module.exports = function (RED) {
 		}
 
 		if(!spheroConnection || !spheroConnection.sphero) {
-			node.error('Could not connect to sphero');
+			// console.log('Could not connect to sphero');
 			return;
 
 		} else {
